@@ -1,36 +1,38 @@
 import java.util.*;
 
+class DNSEntry {
+    String ip;
+    long expiry;
+
+    DNSEntry(String ip, long ttl) {
+        this.ip = ip;
+        this.expiry = System.currentTimeMillis() + ttl;
+    }
+}
+
 public class Week01and02Problems {
-    private static HashMap<String, Integer> stock = new HashMap<>();
-    private static LinkedList<Integer> waitingList = new LinkedList<>();
+    static HashMap<String, DNSEntry> cache = new HashMap<>();
 
     public static void main(String[] args) {
 
-        stock.put("IPHONE15_256GB", 100);
+        resolve("google.com");
 
-        System.out.println("checkStock → " + checkStock("IPHONE15_256GB"));
-
-        purchaseItem("IPHONE15_256GB", 12345);
-        purchaseItem("IPHONE15_256GB", 67890);
-
-        stock.put("IPHONE15_256GB", 0);
-        purchaseItem("IPHONE15_256GB", 99999);
+        resolve("google.com");
     }
 
-    public static int checkStock(String product) {
-        return stock.getOrDefault(product, 0);
-    }
+    public static void resolve(String domain) {
 
-    public static void purchaseItem(String product, int userId) {
+        DNSEntry entry = cache.get(domain);
 
-        int available = stock.get(product);
-
-        if (available > 0) {
-            stock.put(product, available - 1);
-            System.out.println("Success, remaining: " + (available - 1));
+        if (entry != null && entry.expiry > System.currentTimeMillis()) {
+            System.out.println("Cache HIT → " + entry.ip);
         } else {
-            waitingList.add(userId);
-            System.out.println("Added to waiting list, position #" + waitingList.size());
+
+            String ip = "172.217.14.206";
+
+            cache.put(domain, new DNSEntry(ip, 300000));
+
+            System.out.println("Cache MISS → Query upstream → " + ip);
         }
     }
 }
