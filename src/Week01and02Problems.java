@@ -1,36 +1,27 @@
 import java.util.*;
 
 public class Week01and02Problems {
-    static String[] spots = new String[10];
-
     public static void main(String[] args){
 
-        parkVehicle("ABC123");
-        parkVehicle("ABC124");
-        exitVehicle("ABC123");
+        int[] transactions = {500,300,200};
+
+        findTwoSum(transactions,500);
     }
 
-    static void parkVehicle(String plate){
+    static void findTwoSum(int[] nums,int target){
 
-        int index = Math.abs(plate.hashCode()) % spots.length;
+        HashMap<Integer,Integer> map = new HashMap<>();
 
-        while(spots[index]!=null)
-            index = (index+1)%spots.length;
+        for(int i=0;i<nums.length;i++){
 
-        spots[index] = plate;
+            int complement = target - nums[i];
 
-        System.out.println("Vehicle "+plate+" parked at "+index);
-    }
-
-    static void exitVehicle(String plate){
-
-        for(int i=0;i<spots.length;i++){
-
-            if(plate.equals(spots[i])){
-                spots[i]=null;
-                System.out.println("Vehicle exited spot "+i);
+            if(map.containsKey(complement)){
+                System.out.println("Pair: "+complement+" + "+nums[i]);
                 return;
             }
+
+            map.put(nums[i],i);
         }
     }
 }
