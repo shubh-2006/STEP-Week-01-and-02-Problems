@@ -1,38 +1,44 @@
 import java.util.*;
 
-class DNSEntry {
-    String ip;
-    long expiry;
-
-    DNSEntry(String ip, long ttl) {
-        this.ip = ip;
-        this.expiry = System.currentTimeMillis() + ttl;
-    }
-}
-
 public class Week01and02Problems {
-    static HashMap<String, DNSEntry> cache = new HashMap<>();
+    static HashMap<String, Set<String>> index = new HashMap<>();
 
     public static void main(String[] args) {
 
-        resolve("google.com");
+        String doc1 = "this is a sample essay written by student";
+        String doc2 = "this is a sample essay copied by student";
 
-        resolve("google.com");
+        addDocument("essay_001", doc1);
+        analyzeDocument("essay_002", doc2);
     }
 
-    public static void resolve(String domain) {
+    static void addDocument(String id, String text) {
 
-        DNSEntry entry = cache.get(domain);
+        String[] words = text.split(" ");
 
-        if (entry != null && entry.expiry > System.currentTimeMillis()) {
-            System.out.println("Cache HIT → " + entry.ip);
-        } else {
+        for (int i = 0; i < words.length - 2; i++) {
 
-            String ip = "172.217.14.206";
+            String gram = words[i] + " " + words[i + 1] + " " + words[i + 2];
 
-            cache.put(domain, new DNSEntry(ip, 300000));
-
-            System.out.println("Cache MISS → Query upstream → " + ip);
+            index.putIfAbsent(gram, new HashSet<>());
+            index.get(gram).add(id);
         }
+    }
+
+    static void analyzeDocument(String id, String text) {
+
+        String[] words = text.split(" ");
+
+        int matches = 0;
+
+        for (int i = 0; i < words.length - 2; i++) {
+
+            String gram = words[i] + " " + words[i + 1] + " " + words[i + 2];
+
+            if (index.containsKey(gram))
+                matches++;
+        }
+
+        System.out.println("Matching n-grams: " + matches);
     }
 }
