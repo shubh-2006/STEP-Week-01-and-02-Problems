@@ -1,25 +1,36 @@
 import java.util.*;
 
 public class Week01and02Problems {
-    static HashMap<String,Integer> queries = new HashMap<>();
+    static String[] spots = new String[10];
 
-    public static void main(String[] args) {
+    public static void main(String[] args){
 
-        queries.put("java tutorial",1234567);
-        queries.put("javascript",987654);
-        queries.put("java download",456789);
-
-        search("jav");
+        parkVehicle("ABC123");
+        parkVehicle("ABC124");
+        exitVehicle("ABC123");
     }
 
-    static void search(String prefix){
+    static void parkVehicle(String plate){
 
-        System.out.println("Suggestions:");
+        int index = Math.abs(plate.hashCode()) % spots.length;
 
-        for(String q:queries.keySet()){
+        while(spots[index]!=null)
+            index = (index+1)%spots.length;
 
-            if(q.startsWith(prefix))
-                System.out.println(q+" ("+queries.get(q)+")");
+        spots[index] = plate;
+
+        System.out.println("Vehicle "+plate+" parked at "+index);
+    }
+
+    static void exitVehicle(String plate){
+
+        for(int i=0;i<spots.length;i++){
+
+            if(plate.equals(spots[i])){
+                spots[i]=null;
+                System.out.println("Vehicle exited spot "+i);
+                return;
+            }
         }
     }
 }
