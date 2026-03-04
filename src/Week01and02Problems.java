@@ -1,37 +1,25 @@
 import java.util.*;
 
 public class Week01and02Problems {
-    static HashMap<String,Integer> pageViews = new HashMap<>();
-    static HashMap<String,Set<String>> uniqueVisitors = new HashMap<>();
-    static HashMap<String,Integer> trafficSource = new HashMap<>();
+    static HashMap<String,Integer> requests = new HashMap<>();
+    static int LIMIT = 5;
 
     public static void main(String[] args) {
 
-        processEvent("/news","user1","google");
-        processEvent("/news","user2","facebook");
-        processEvent("/sports","user3","google");
-
-        getDashboard();
+        for(int i=0;i<7;i++)
+            checkRateLimit("abc123");
     }
 
-    static void processEvent(String url,String user,String source){
+    static void checkRateLimit(String client){
 
-        pageViews.put(url,pageViews.getOrDefault(url,0)+1);
+        int count = requests.getOrDefault(client,0);
 
-        uniqueVisitors.putIfAbsent(url,new HashSet<>());
-        uniqueVisitors.get(url).add(user);
-
-        trafficSource.put(source,trafficSource.getOrDefault(source,0)+1);
-    }
-
-    static void getDashboard(){
-
-        System.out.println("Top Pages:");
-        for(String page:pageViews.keySet()){
-            System.out.println(page+" - "+pageViews.get(page)+" views");
+        if(count < LIMIT){
+            requests.put(client,count+1);
+            System.out.println("Allowed ("+(LIMIT-count-1)+" remaining)");
         }
-
-        System.out.println("\nTraffic Sources:");
-        System.out.println(trafficSource);
+        else{
+            System.out.println("Denied - limit exceeded");
+        }
     }
 }
