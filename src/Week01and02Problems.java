@@ -1,38 +1,36 @@
 import java.util.*;
 
 public class Week01and02Problems {
-    private static HashMap<String, Integer> users = new HashMap<>();
-    private static HashMap<String, Integer> attempts = new HashMap<>();
+    private static HashMap<String, Integer> stock = new HashMap<>();
+    private static LinkedList<Integer> waitingList = new LinkedList<>();
 
     public static void main(String[] args) {
 
-        users.put("john_doe", 1);
-        users.put("admin", 2);
+        stock.put("IPHONE15_256GB", 100);
 
-        System.out.println("checkAvailability(\"john_doe\") → " + checkAvailability("john_doe"));
-        System.out.println("checkAvailability(\"jane_smith\") → " + checkAvailability("jane_smith"));
+        System.out.println("checkStock → " + checkStock("IPHONE15_256GB"));
 
-        System.out.println("suggestAlternatives(\"john_doe\") → " + suggestAlternatives("john_doe"));
+        purchaseItem("IPHONE15_256GB", 12345);
+        purchaseItem("IPHONE15_256GB", 67890);
 
-        attempts.put("admin", 10543);
-
-        System.out.println("getMostAttempted() → " + getMostAttempted());
+        stock.put("IPHONE15_256GB", 0);
+        purchaseItem("IPHONE15_256GB", 99999);
     }
 
-    public static boolean checkAvailability(String username) {
-        attempts.put(username, attempts.getOrDefault(username, 0) + 1);
-        return !users.containsKey(username);
+    public static int checkStock(String product) {
+        return stock.getOrDefault(product, 0);
     }
 
-    public static List<String> suggestAlternatives(String username) {
-        List<String> suggestions = new ArrayList<>();
-        suggestions.add(username + "1");
-        suggestions.add(username + "2");
-        suggestions.add(username.replace("_", "."));
-        return suggestions;
-    }
+    public static void purchaseItem(String product, int userId) {
 
-    public static String getMostAttempted() {
-        return Collections.max(attempts.entrySet(), Map.Entry.comparingByValue()).getKey();
+        int available = stock.get(product);
+
+        if (available > 0) {
+            stock.put(product, available - 1);
+            System.out.println("Success, remaining: " + (available - 1));
+        } else {
+            waitingList.add(userId);
+            System.out.println("Added to waiting list, position #" + waitingList.size());
+        }
     }
 }
