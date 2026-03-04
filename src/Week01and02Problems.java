@@ -1,27 +1,28 @@
 import java.util.*;
 
 public class Week01and02Problems {
+    static HashMap<String,String> L1 = new HashMap<>();
+    static HashMap<String,String> L2 = new HashMap<>();
+
     public static void main(String[] args){
 
-        int[] transactions = {500,300,200};
+        L2.put("video_123","SSD_DATA");
 
-        findTwoSum(transactions,500);
+        getVideo("video_123");
+        getVideo("video_123");
     }
 
-    static void findTwoSum(int[] nums,int target){
+    static void getVideo(String id){
 
-        HashMap<Integer,Integer> map = new HashMap<>();
-
-        for(int i=0;i<nums.length;i++){
-
-            int complement = target - nums[i];
-
-            if(map.containsKey(complement)){
-                System.out.println("Pair: "+complement+" + "+nums[i]);
-                return;
-            }
-
-            map.put(nums[i],i);
+        if(L1.containsKey(id)){
+            System.out.println("L1 Cache HIT");
+        }
+        else if(L2.containsKey(id)){
+            System.out.println("L2 Cache HIT → promoted to L1");
+            L1.put(id,L2.get(id));
+        }
+        else{
+            System.out.println("Database HIT");
         }
     }
 }
