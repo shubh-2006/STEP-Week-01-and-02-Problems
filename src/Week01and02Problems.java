@@ -1,44 +1,37 @@
 import java.util.*;
 
 public class Week01and02Problems {
-    static HashMap<String, Set<String>> index = new HashMap<>();
+    static HashMap<String,Integer> pageViews = new HashMap<>();
+    static HashMap<String,Set<String>> uniqueVisitors = new HashMap<>();
+    static HashMap<String,Integer> trafficSource = new HashMap<>();
 
     public static void main(String[] args) {
 
-        String doc1 = "this is a sample essay written by student";
-        String doc2 = "this is a sample essay copied by student";
+        processEvent("/news","user1","google");
+        processEvent("/news","user2","facebook");
+        processEvent("/sports","user3","google");
 
-        addDocument("essay_001", doc1);
-        analyzeDocument("essay_002", doc2);
+        getDashboard();
     }
 
-    static void addDocument(String id, String text) {
+    static void processEvent(String url,String user,String source){
 
-        String[] words = text.split(" ");
+        pageViews.put(url,pageViews.getOrDefault(url,0)+1);
 
-        for (int i = 0; i < words.length - 2; i++) {
+        uniqueVisitors.putIfAbsent(url,new HashSet<>());
+        uniqueVisitors.get(url).add(user);
 
-            String gram = words[i] + " " + words[i + 1] + " " + words[i + 2];
-
-            index.putIfAbsent(gram, new HashSet<>());
-            index.get(gram).add(id);
-        }
+        trafficSource.put(source,trafficSource.getOrDefault(source,0)+1);
     }
 
-    static void analyzeDocument(String id, String text) {
+    static void getDashboard(){
 
-        String[] words = text.split(" ");
-
-        int matches = 0;
-
-        for (int i = 0; i < words.length - 2; i++) {
-
-            String gram = words[i] + " " + words[i + 1] + " " + words[i + 2];
-
-            if (index.containsKey(gram))
-                matches++;
+        System.out.println("Top Pages:");
+        for(String page:pageViews.keySet()){
+            System.out.println(page+" - "+pageViews.get(page)+" views");
         }
 
-        System.out.println("Matching n-grams: " + matches);
+        System.out.println("\nTraffic Sources:");
+        System.out.println(trafficSource);
     }
 }
