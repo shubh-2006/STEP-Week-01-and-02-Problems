@@ -1,25 +1,25 @@
 import java.util.*;
 
 public class Week01and02Problems {
-    static HashMap<String,Integer> requests = new HashMap<>();
-    static int LIMIT = 5;
+    static HashMap<String,Integer> queries = new HashMap<>();
 
     public static void main(String[] args) {
 
-        for(int i=0;i<7;i++)
-            checkRateLimit("abc123");
+        queries.put("java tutorial",1234567);
+        queries.put("javascript",987654);
+        queries.put("java download",456789);
+
+        search("jav");
     }
 
-    static void checkRateLimit(String client){
+    static void search(String prefix){
 
-        int count = requests.getOrDefault(client,0);
+        System.out.println("Suggestions:");
 
-        if(count < LIMIT){
-            requests.put(client,count+1);
-            System.out.println("Allowed ("+(LIMIT-count-1)+" remaining)");
-        }
-        else{
-            System.out.println("Denied - limit exceeded");
+        for(String q:queries.keySet()){
+
+            if(q.startsWith(prefix))
+                System.out.println(q+" ("+queries.get(q)+")");
         }
     }
 }
